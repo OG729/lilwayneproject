@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="display-4 mb-4">Lil Wayne's Top 5 Albums</h1>
+  <ul class="list-group">
+    {% for album in albums_list %}
+      <li class="list-group-item">{{ album.title }} <span class="badge badge-secondary">Released on {{ album.release_date }}</span></li>
+    {% endfor %}
+  </ul>
+
+  <!-- Link back to the homepage -->
+  <a href="{% url 'homepage' %}" class="btn btn-primary mt-3">Back to Homepage</a>
+</div>
+{% endblock %}

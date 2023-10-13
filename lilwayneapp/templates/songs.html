@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="display-4">Lil Wayne's Top5 Songs</h1>
+    <ul class="list-group">
+      {% for song in songs_list %}
+        <li class="list-group-item">
+          {{ song.title }}
+          {% if song.album %}
+            ({{ song.album.title }})
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Link back to the homepage -->
+    <a href="{% url 'homepage' %}" class="btn btn-primary mt-3">Back to Homepage</a>
+  </div>
+
+  <style>
+    /* Custom CSS styles can be added here */
+    body {
+      background-color: #f8f9fa; /* Set background color */
+    }
+
+    .container {
+      max-width: 800px; /* Limit container width */
+    }
+  </style>
+{% endblock %}

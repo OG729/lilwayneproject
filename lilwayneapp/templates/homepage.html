@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="container mt-5">
+    <!-- Center-align the content -->
+    <div class="text-center">
+      <h1 class="display-4">Welcome to Lil Wayne's Page</h1>
+      <h2>{{ artist_profile.name }}</h2>
+      <p>{{ artist_profile.bio }}</p>
+      
+      <!-- Display artist profile image -->
+      <img src="" alt="">
+      
+      <!-- Social media links -->
+      <div class="mt-3">
+        {% if artist_profile.facebook_link %}
+          <a href="https://web.facebook.com/LilWayne/" target="_blank" class="btn btn-primary mr-2">Facebook</a>
+        {% endif %}
+        {% if artist_profile.twitter_link %}
+          <a href="https://twitter.com/LilTunechi" target="_blank" class="btn btn-info mr-2">Twitter</a>
+        {% endif %}
+        {% if artist_profile.instagram_link %}
+          <a href="https://www.instagram.com/liltunechi/?hl=en" target="_blank" class="btn btn-danger">Instagram</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Center-align the navigation links -->
+    <div class="text-center mt-3">
+      <a href="{% url 'albums' %}" class="btn btn-primary">View Albums</a>
+      <a href="{% url 'songs' %}" class="btn btn-primary">View Songs</a>
+    </div>
+  </div>
+{% endblock %}
