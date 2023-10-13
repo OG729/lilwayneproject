@@ -11,7 +11,7 @@ import os
 import sys
 import django
 sys.path.insert(0, os.path.abspath('..'))
-os.environ['DJANGO_SETTINGS_MODULE'] = 'lilwayneapp.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'lilwayneproject.settings'
 django.setup()
 
 
