@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lilwayneapp.views &mdash; lilwayneproject 22.11.25 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=d4f010bc"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            lilwayneproject
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">lilwayneapp</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lilwayneproject</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lilwayneapp.views</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lilwayneapp.views</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Django views for handling user authentication, homepage, albums, songs, and user profiles.</span>
+
+<span class="sd">This module contains functions for rendering different views related to the music website.</span>
+<span class="sd">These views include user authentication, displaying the homepage, albums, and songs, and managing user profiles.</span>
+
+<span class="sd">Functions:</span>
+<span class="sd">    - `signup(request)`: Handles user registration and redirects to the user&#39;s profile upon successful registration.</span>
+<span class="sd">    - `homepage(request)`: Renders the homepage with the artist&#39;s profile information.</span>
+<span class="sd">    - `albums(request)`: Fetches and displays a list of albums without including artist_id.</span>
+<span class="sd">    - `songs(request)`: Fetches and displays a list of songs.</span>
+<span class="sd">    - `profile(request)`: Renders the user&#39;s profile page, allowing users to vote for their favorite song in a poll.</span>
+
+<span class="sd">Dependencies:</span>
+<span class="sd">    - Django: Python web framework for building web applications.</span>
+<span class="sd">    - `render` and `redirect` functions from `django.shortcuts` for rendering templates and redirecting requests.</span>
+<span class="sd">    - `login_required` decorator from `django.contrib.auth.decorators` for restricting access to authenticated users.</span>
+<span class="sd">    - `CustomUserCreationForm`, `PollForm`, `Song`, `Album`, `ArtistProfile`, and `Poll` models from the application.</span>
+<span class="sd">    - `login` function from `django.contrib.auth` for user authentication and login.</span>
+
+<span class="sd">Note:</span>
+<span class="sd">    Ensure the appropriate Django models and forms are imported for the views to work correctly.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Song</span><span class="p">,</span> <span class="n">Album</span><span class="p">,</span> <span class="n">ArtistProfile</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">CustomUserCreationForm</span><span class="p">,</span> <span class="n">PollForm</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">login</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">PollForm</span>  <span class="c1"># Import your PollForm here</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Poll</span>
+
+<div class="viewcode-block" id="signup">
+<a class="viewcode-back" href="../../lilwayneapp.html#lilwayneapp.views.signup">[docs]</a>
+<span class="k">def</span> <span class="nf">signup</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles user registration and redirects to the user&#39;s profile upon successful registration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: Redirects to the user&#39;s profile page after successful registration or renders the registration form.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">CustomUserCreationForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;profile&#39;</span><span class="p">)</span>  <span class="c1"># Redirect to the user&#39;s profile after registration</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">CustomUserCreationForm</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;registration/signup.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="homepage">
+<a class="viewcode-back" href="../../lilwayneapp.html#lilwayneapp.views.homepage">[docs]</a>
+<span class="k">def</span> <span class="nf">homepage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Renders the homepage with the artist&#39;s profile information.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: Renders the homepage template with the artist&#39;s profile information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">artist_profile</span> <span class="o">=</span> <span class="n">ArtistProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;artist_profile&#39;</span><span class="p">:</span> <span class="n">artist_profile</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;homepage.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="albums">
+<a class="viewcode-back" href="../../lilwayneapp.html#lilwayneapp.views.albums">[docs]</a>
+<span class="k">def</span> <span class="nf">albums</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetches and displays a list of albums without including artist_id.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: Renders the albums template with the list of albums.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Fetch a list of albums without including artist_id</span>
+    <span class="n">albums_list</span> <span class="o">=</span> <span class="n">Album</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;release_date&#39;</span><span class="p">)</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;albums_list&#39;</span><span class="p">:</span> <span class="n">albums_list</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;albums.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="songs">
+<a class="viewcode-back" href="../../lilwayneapp.html#lilwayneapp.views.songs">[docs]</a>
+<span class="k">def</span> <span class="nf">songs</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetches and displays a list of songs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: Renders the songs template with the list of songs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">songs_list</span> <span class="o">=</span> <span class="n">Song</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;songs_list&#39;</span><span class="p">:</span> <span class="n">songs_list</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;songs.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="profile">
+<a class="viewcode-back" href="../../lilwayneapp.html#lilwayneapp.views.profile">[docs]</a>
+<span class="nd">@login_required</span>
+<span class="k">def</span> <span class="nf">profile</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Renders the user&#39;s profile page, allowing users to vote for their favorite song in a poll.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (HttpRequest): The HTTP request object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        HttpResponse: Renders the user&#39;s profile template with the poll form and favorite songs list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">favorite_songs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A Milli&#39;</span><span class="p">,</span> <span class="s1">&#39;Lollipop&#39;</span><span class="p">,</span> <span class="s1">&#39;6 Foot 7 Foot&#39;</span><span class="p">,</span> <span class="s1">&#39;How to Love&#39;</span><span class="p">,</span> <span class="s1">&#39;No Worries&#39;</span><span class="p">]</span>
+    <span class="n">success_message</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">PollForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="c1"># Get the selected song from the form</span>
+            <span class="n">selected_song</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;favorite_song&#39;</span><span class="p">]</span>
+            
+            <span class="c1"># Get the user making the poll</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            
+            <span class="c1"># Check if the user has already voted</span>
+            <span class="n">existing_vote</span> <span class="o">=</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            
+            <span class="k">if</span> <span class="n">existing_vote</span><span class="p">:</span>
+                <span class="c1"># User has already voted, update the existing vote</span>
+                <span class="n">existing_vote</span><span class="o">.</span><span class="n">favorite_song</span> <span class="o">=</span> <span class="n">selected_song</span>
+                <span class="n">existing_vote</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># User has not voted yet, create a new poll entry</span>
+                <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">favorite_song</span><span class="o">=</span><span class="n">selected_song</span><span class="p">)</span>
+            
+            <span class="n">success_message</span> <span class="o">=</span> <span class="s1">&#39;Poll submitted successfully!&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Form is not valid, handle the errors if needed</span>
+            <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">PollForm</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;registration/profile.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s1">&#39;favorite_songs&#39;</span><span class="p">:</span> <span class="n">favorite_songs</span><span class="p">,</span> <span class="s1">&#39;success_message&#39;</span><span class="p">:</span> <span class="n">success_message</span><span class="p">})</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Makgera MODISE.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

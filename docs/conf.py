@@ -6,7 +6,6 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-
 import os
 import sys
 import django
@@ -16,11 +15,10 @@ django.setup()
 
 
 
-
-project = 'lilwayneapp'
+project = 'lilwayneproject'
 copyright = '2023, Makgera MODISE'
 author = 'Makgera MODISE'
-release = '25.11.23'
+release = '22.11.25'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
